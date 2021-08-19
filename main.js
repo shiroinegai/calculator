@@ -35,10 +35,26 @@ operate = (operator, num1, num2) => {
 const expression = document.querySelector(".expression");
 expression.addEventListener("keydown", (e) => {
   if (
-    e.key.match(/[\d%\/\*\-\+\.()]|Backspace|Delete/) ||
+    e.key.match(/[\d%\-\+\.()]|Backspace|Delete/) ||
     [37, 38, 39, 40].includes(e.keyCode) // arrow keys
   ) {
     return;
+  } else if (e.key === "*") {
+    e.preventDefault();
+    expression.setRangeText(
+      "×",
+      expression.selectionStart,
+      expression.selectionEnd,
+      "end"
+    );
+  } else if (e.key === "/") {
+    e.preventDefault();
+    expression.setRangeText(
+      "÷",
+      expression.selectionStart,
+      expression.selectionEnd,
+      "end"
+    );
   } else {
     e.preventDefault();
   }
