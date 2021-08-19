@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@400;700&display=swap");
+
 *,
 ::before,
 ::after {
@@ -8,4 +10,128 @@
 
 :root {
   font-size: clamp(16px, 2.5vw, 24px);
+  --white: #ffffff;
+  --red: #fc6c6c;
+  --green: #e4fc6c;
+  --light-gray: #b3b3b3;
+  --dark-gray: #242424;
+  --black: #141414;
+}
+
+body {
+  background: var(--black);
+  display: flex;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 20rem;
+}
+
+h1,
+div,
+textarea,
+button {
+  font-family: "Commissioner", sans-serif;
+}
+
+h1 {
+  color: var(--green);
+  font-weight: 700;
+  margin: 0.75em 0;
+}
+
+.calculator {
+  max-width: 20rem;
+}
+
+.display {
+  border-bottom: 1px solid var(--light-gray);
+  padding: 0 0.5em;
+  margin-bottom: 1em;
+}
+
+.expression,
+.result {
+  text-align: right;
+}
+
+.expression {
+  background: var(--black);
+  border: none;
+  caret-color: var(--green);
+  color: var(--white);
+  height: 5.28rem;
+  font-size: 2.4rem;
+  line-height: 1.1em;
+  inline-size: 19rem;
+  overflow-wrap: break-word;
+  resize: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.expression::-webkit-scrollbar {
+  display: none;
+}
+
+.expression:focus-visible {
+  outline: none;
+}
+
+.result {
+  color: var(--light-gray);
+  font-size: 1.25rem;
+  line-height: 1;
+  height: 2.5rem;
+  padding: 0.5em 0;
+  transition: all 0.25s;
+}
+
+.keys {
+  display: grid;
+  gap: 0.5em;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+button {
+  background: var(--dark-gray);
+  border: none;
+  border-radius: 100rem;
+  color: var(--white);
+  font-family: "Commissioner", sans-serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  justify-self: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  transition: all 0.25s;
+}
+
+button:hover,
+.result:hover {
+  cursor: pointer;
+}
+
+button:active {
+  opacity: 0.8;
+  transform: scale(0.9);
+}
+
+.result:active {
+  opacity: 0.8;
+  transform: translateY(-0.3rem);
+}
+
+button[data-key="clear"] {
+  color: var(--red);
+}
+
+button[data-key="posneg"] {
+  font-size: 1.25rem;
+}
+
+.operator {
+  color: var(--green);
+  font-size: 1.75rem;
 }
