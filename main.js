@@ -31,3 +31,15 @@ operate = (operator, num1, num2) => {
       return subtract(num1, num2);
   }
 };
+
+const expression = document.querySelector(".expression");
+expression.addEventListener("keydown", (e) => {
+  if (
+    e.key.match(/[\d%\/\*\-\+\.()]|Backspace|Delete/) ||
+    [37, 38, 39, 40].includes(e.keyCode) // arrow keys
+  ) {
+    return;
+  } else {
+    e.preventDefault();
+  }
+});
