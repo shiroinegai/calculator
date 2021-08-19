@@ -59,3 +59,13 @@ expression.addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 });
+
+const result = document.querySelector(".result");
+
+clearCalculator = () => {
+  expression.value = "";
+  result.innerText = "";
+};
+
+const clearButton = document.querySelector("[data-key='clear']");
+clearButton.addEventListener("click", clearCalculator);
