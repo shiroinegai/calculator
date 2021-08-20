@@ -31,18 +31,16 @@ function clearCalculator() {
   result.innerText = "";
 }
 
-const clearButton = document.querySelector("[data-key='clear']");
-clearButton.addEventListener("click", clearCalculator);
-
 const keys = document.querySelectorAll("[data-key]");
 keys.forEach((key) => {
   let value = key.dataset.key;
-  if (Number.isInteger(parseInt(value))) {
+  if (value === "clear") {
+    key.addEventListener("click", clearCalculator);
+  }
+  if (value.match(/[\d%×÷\+\−\.]/)) {
     key.addEventListener("click", () => inputValue(value));
   }
 });
-
-console.log(keys);
 
 // Calculator logic & functions
 
