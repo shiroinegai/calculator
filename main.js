@@ -29,8 +29,11 @@ expression.addEventListener("keyup", updateResult);
 const result = document.querySelector(".result");
 
 function updateResult() {
-  let preview = parseExpression().toString();
-  result.innerText = preview.length <= 20 ? preview : "I can't handle this!";
+  let preview;
+  if (expression.value && expression.value.slice(-1).match(/[\d%]/)) {
+    preview = solveExpression().toString();
+    result.innerText = preview.length <= 20 ? preview : "I can't handle this!";
+  }
 }
 
 function clearCalculator() {
@@ -86,6 +89,32 @@ function operate(num1, operator, num2) {
     case "−":
       return subtract(num1, num2);
   }
+}
+
+function solveExpression() {
+  let workingExp = parseExpression();
+
+  while (workingExp.includes("×") || workingExp.includes("÷")) {
+    let i = workingExp.findIndex((e) => {
+      return e === "×" || e === "÷";
+    });
+
+    let segment = operate(workingExp[i - 1], workingExp[i], workingExp[i + 1]);
+
+    workingExp.splice(i - 1, 3, segment);
+  }
+
+  while (workingExp.includes("+") || workingExp.includes("−")) {
+    let i = workingExp.findIndex((e) => {
+      return e === "+" || e === "−";
+    });
+
+    let segment = operate(workingExp[i - 1], workingExp[i], workingExp[i + 1]);
+
+    workingExp.splice(i - 1, 3, segment);
+  }
+
+  return workingExp;
 }
 
 // Helper functions
