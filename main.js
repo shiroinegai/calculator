@@ -1,60 +1,63 @@
 console.log("Calculator is running.");
 
-add = (num1, num2) => {
+function add(num1, num2) {
   return num1 + num2;
-};
+}
 
-subtract = (num1, num2) => {
+function subtract(num1, num2) {
   return num1 - num2;
-};
+}
 
-multiply = (num1, num2) => {
+function multiply(num1, num2) {
   return num1 * num2;
-};
+}
 
-divide = (num1, num2) => {
+function divide(num1, num2) {
   if (num2 === 0) {
     return "Infinity";
   }
   return num1 / num2;
-};
+}
 
-operate = (operator, num1, num2) => {
+function operate(operator, num1, num2) {
   switch (operator) {
-    case "multiply":
+    case "×":
       return multiply(num1, num2);
-    case "divide":
+    case "÷":
       return divide(num1, num2);
-    case "add":
+    case "+":
       return add(num1, num2);
-    case "subtract":
+    case "−":
       return subtract(num1, num2);
   }
-};
+}
 
 const expression = document.querySelector(".expression");
+
+function useMathSymbol(symbol) {
+  expression.setRangeText(
+    symbol,
+    expression.selectionStart,
+    expression.selectionEnd,
+    "end"
+  );
+}
+
 expression.addEventListener("keydown", (e) => {
   if (
-    e.key.match(/[\d%\-\+\.()]|Backspace|Delete/) ||
+    e.key.match(/[\d%\+\.()]|Backspace|Delete/) ||
     [37, 38, 39, 40].includes(e.keyCode) // arrow keys
   ) {
     return;
   } else if (e.key === "*") {
     e.preventDefault();
-    expression.setRangeText(
-      "×",
-      expression.selectionStart,
-      expression.selectionEnd,
-      "end"
-    );
+    useMathSymbol("×");
   } else if (e.key === "/") {
     e.preventDefault();
-    expression.setRangeText(
-      "÷",
-      expression.selectionStart,
-      expression.selectionEnd,
-      "end"
-    );
+    useMathSymbol("÷");
+  } else if (e.key === "-") {
+    e.preventDefault();
+    useMathSymbol("−");
   } else {
     e.preventDefault();
   }
@@ -62,10 +65,10 @@ expression.addEventListener("keydown", (e) => {
 
 const result = document.querySelector(".result");
 
-clearCalculator = () => {
+function clearCalculator() {
   expression.value = "";
   result.innerText = "";
-};
+}
 
 const clearButton = document.querySelector("[data-key='clear']");
 clearButton.addEventListener("click", clearCalculator);
