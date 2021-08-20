@@ -24,7 +24,14 @@ expression.addEventListener("keydown", (e) => {
   }
 });
 
+expression.addEventListener("keyup", updateResult);
+
 const result = document.querySelector(".result");
+
+function updateResult() {
+  let preview = parseExpression().toString();
+  result.innerText = preview.length <= 20 ? preview : "I can't handle this!";
+}
 
 function clearCalculator() {
   expression.value = "";
@@ -66,7 +73,9 @@ function divide(num1, num2) {
   return num1 / num2;
 }
 
-function operate(operator, num1, num2) {
+function operate(num1, operator, num2) {
+  num1 = parseFloat(num1);
+  num2 = parseFloat(num2);
   switch (operator) {
     case "×":
       return multiply(num1, num2);
@@ -80,6 +89,10 @@ function operate(operator, num1, num2) {
 }
 
 // Helper functions
+
+function parseExpression() {
+  return expression.value.split(/([×÷+−])/);
+}
 
 function handleParenthesisInput() {
   if (
@@ -124,4 +137,5 @@ function inputValue(value) {
     expression.selectionEnd,
     "end"
   );
+  updateResult();
 }
