@@ -6,7 +6,7 @@ const expression = document.querySelector(".expression");
 
 expression.addEventListener("keydown", (e) => {
   if (
-    e.key.match(/[\d%\+\.()]|Backspace|Delete/) ||
+    e.key.match(/[\d%\+()]|Backspace|Delete/) ||
     [37, 38, 39, 40].includes(e.keyCode) // arrow keys
   ) {
     return;
@@ -19,6 +19,9 @@ expression.addEventListener("keydown", (e) => {
   } else if (e.key === "-") {
     e.preventDefault();
     inputValue("−");
+  } else if (e.key === ".") {
+    e.preventDefault();
+    handleDecimalInput();
   } else {
     e.preventDefault();
   }
@@ -31,8 +34,12 @@ const result = document.querySelector(".result");
 function updateResult() {
   let preview;
   if (expression.value && expression.value.slice(-1).match(/[\d%]/)) {
-    preview = solveExpression().toString();
-    result.innerText = preview.length <= 20 ? preview : "I can't handle this!";
+    preview = solveExpression();
+    if (!Number.isInteger(preview[0])) {
+      preview[0] = preview[0].toFixed(3);
+    }
+    result.innerText =
+      preview.toString().length <= 20 ? preview : "I can't handle this!";
   }
 }
 
@@ -50,7 +57,10 @@ keys.forEach((key) => {
   if (value === "parenthesis") {
     key.addEventListener("click", () => handleParenthesisInput());
   }
-  if (value.match(/[\d%×÷\+\−\.]/)) {
+  if (value === ".") {
+    key.addEventListener("click", () => handleDecimalInput());
+  }
+  if (value.match(/[\d%×÷\+\−]/)) {
     key.addEventListener("click", () => inputValue(value));
   }
 });
@@ -121,6 +131,29 @@ function solveExpression() {
 
 function parseExpression() {
   return expression.value.split(/([×÷+−])/);
+}
+
+function handleDecimalInput() {
+  inputValue(".");
+
+  let decimalTest = expression.value.split(/[×÷+−]/);
+
+  for (let i = 0; i < decimalTest.length; i++) {
+    if (
+      decimalTest[i].match(/\d+(\.{2,}\d*)/) ||
+      decimalTest[i].match(/\.\d+(\.\d*)/) ||
+      decimalTest[i].match(/\d+(\.\d*\.)/) ||
+      decimalTest[i] === "."
+    ) {
+      expression.setRangeText(
+        "",
+        expression.selectionStart - 1,
+        expression.selectionEnd,
+        "end"
+      );
+      updateResult();
+    }
+  }
 }
 
 function handleParenthesisInput() {
