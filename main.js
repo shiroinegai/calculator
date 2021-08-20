@@ -35,9 +35,6 @@ function updateResult() {
   let preview;
   if (expression.value && expression.value.slice(-1).match(/[\d%]/)) {
     preview = solveExpression();
-    if (!Number.isInteger(preview[0])) {
-      preview[0] = preview[0].toFixed(3);
-    }
     result.innerText =
       preview.toString().length <= 20 ? preview : "I can't handle this!";
   }
@@ -124,13 +121,24 @@ function solveExpression() {
     workingExp.splice(i - 1, 3, segment);
   }
 
-  return workingExp;
+  solution = parseFloat(workingExp[0]);
+
+  if (Number.isInteger(solution)) {
+    return solution;
+  } else {
+    return handleFloat(solution);
+  }
 }
 
 // Helper functions
 
 function parseExpression() {
   return expression.value.split(/([×÷+−])/);
+}
+
+function handleFloat(num) {
+  rounded = parseFloat(num).toFixed(3);
+  return rounded;
 }
 
 function handleDecimalInput() {
