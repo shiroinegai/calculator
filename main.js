@@ -1,5 +1,51 @@
 console.log("Calculator is running.");
 
+// Calculator interface elements & functions
+
+const expression = document.querySelector(".expression");
+
+expression.addEventListener("keydown", (e) => {
+  if (
+    e.key.match(/[\d%\+\.()]|Backspace|Delete/) ||
+    [37, 38, 39, 40].includes(e.keyCode) // arrow keys
+  ) {
+    return;
+  } else if (e.key === "*") {
+    e.preventDefault();
+    useMathSymbol("×");
+  } else if (e.key === "/") {
+    e.preventDefault();
+    useMathSymbol("÷");
+  } else if (e.key === "-") {
+    e.preventDefault();
+    useMathSymbol("−");
+  } else {
+    e.preventDefault();
+  }
+});
+
+const result = document.querySelector(".result");
+
+function clearCalculator() {
+  expression.value = "";
+  result.innerText = "";
+}
+
+const clearButton = document.querySelector("[data-key='clear']");
+clearButton.addEventListener("click", clearCalculator);
+
+const keys = document.querySelectorAll("[data-key]");
+keys.forEach((key) => {
+  let value = key.dataset.key;
+  if (Number.isInteger(parseInt(value))) {
+    key.addEventListener("click", () => inputValue(value));
+  }
+});
+
+console.log(keys);
+
+// Calculator logic & functions
+
 function add(num1, num2) {
   return num1 + num2;
 }
@@ -32,7 +78,7 @@ function operate(operator, num1, num2) {
   }
 }
 
-const expression = document.querySelector(".expression");
+// Helper functions
 
 function useMathSymbol(symbol) {
   expression.setRangeText(
@@ -43,32 +89,12 @@ function useMathSymbol(symbol) {
   );
 }
 
-expression.addEventListener("keydown", (e) => {
-  if (
-    e.key.match(/[\d%\+\.()]|Backspace|Delete/) ||
-    [37, 38, 39, 40].includes(e.keyCode) // arrow keys
-  ) {
-    return;
-  } else if (e.key === "*") {
-    e.preventDefault();
-    useMathSymbol("×");
-  } else if (e.key === "/") {
-    e.preventDefault();
-    useMathSymbol("÷");
-  } else if (e.key === "-") {
-    e.preventDefault();
-    useMathSymbol("−");
-  } else {
-    e.preventDefault();
-  }
-});
-
-const result = document.querySelector(".result");
-
-function clearCalculator() {
-  expression.value = "";
-  result.innerText = "";
+function inputValue(value) {
+  expression.focus();
+  expression.setRangeText(
+    value,
+    expression.selectionStart,
+    expression.selectionEnd,
+    "end"
+  );
 }
-
-const clearButton = document.querySelector("[data-key='clear']");
-clearButton.addEventListener("click", clearCalculator);
