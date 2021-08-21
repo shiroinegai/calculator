@@ -41,8 +41,13 @@ function updateResult() {
   let preview;
   if (expression.value && expression.value.slice(-1).match(/[\d%)]/)) {
     preview = solveExpression(expression.value);
-    result.innerText =
-      preview.toString().length <= 20 ? preview : "I can't handle this!";
+
+    if (preview === NaN) {
+      result.innerText = "Please check syntax";
+    } else {
+      result.innerText =
+        preview.toString().length <= 20 ? preview : "I can't handle this!";
+    }
   }
 }
 
@@ -99,27 +104,46 @@ function equal() {
 // Calculator logic & functions
 
 function add(num1, num2) {
-  return num1 + num2;
+  if (isNaN(num2) && num2.includes("%")) {
+    return num1 * (1 + parsePercent(num2) / 100);
+  } else {
+    return num1 + num2;
+  }
 }
 
 function subtract(num1, num2) {
-  return num1 - num2;
+  if (isNaN(num2) && num2.includes("%")) {
+    return num1 * (1 - parsePercent(num2) / 100);
+  } else {
+    return num1 - num2;
+  }
 }
 
 function multiply(num1, num2) {
-  return num1 * num2;
+  if (isNaN(num2) && num2.includes("%")) {
+    return num1 * (parsePercent(num2) / 100);
+  } else {
+    return num1 * num2;
+  }
 }
 
 function divide(num1, num2) {
   if (num2 === 0) {
     return "Infinity";
+  } else if (isNaN(num2) && num2.includes("%")) {
+    return num1 / (parsePercent(num2) / 100);
+  } else {
+    return num1 / num2;
   }
-  return num1 / num2;
 }
 
 function operate(num1, operator, num2) {
   num1 = parseFloat(num1);
-  num2 = parseFloat(num2);
+  if (isNaN(num2) && num2.includes("%")) {
+    console.log(num2);
+  } else {
+    num2 = parseFloat(num2);
+  }
   switch (operator) {
     case "×":
       return multiply(num1, num2);
@@ -189,6 +213,10 @@ function solveExpression(inputExp) {
 
 function parseExpression(inputExp) {
   return inputExp.split(/([×÷+−])/);
+}
+
+function parsePercent(percent) {
+  return parseFloat(percent.slice(0, -1));
 }
 
 function handleFloat(num) {
