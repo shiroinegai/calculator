@@ -33,8 +33,8 @@ const result = document.querySelector(".result");
 
 function updateResult() {
   let preview;
-  if (expression.value && expression.value.slice(-1).match(/[\d%]/)) {
-    preview = solveExpression();
+  if (expression.value && expression.value.slice(-1).match(/[\d%)]/)) {
+    preview = solveExpression(expression.value);
     result.innerText =
       preview.toString().length <= 20 ? preview : "I can't handle this!";
   }
@@ -98,8 +98,29 @@ function operate(num1, operator, num2) {
   }
 }
 
-function solveExpression() {
-  let workingExp = parseExpression();
+function solveExpression(inputExp) {
+  let evalParen = inputExp;
+
+  if (evalParen.includes(")(")) {
+    evalParen = evalParen.replaceAll(")(", ")×(");
+  }
+
+  while (
+    evalParen.includes("(") &&
+    evalParen.includes(")") &&
+    noOfOpenParen() === noOfCloseParen()
+  ) {
+    let openParenIndex = locateLastOpenParen(evalParen);
+    let closeParenIndex = locateNextCloseParen(evalParen, openParenIndex);
+
+    let workingParenExp = evalParen.slice(openParenIndex + 1, closeParenIndex);
+
+    parenSolution = solveExpression(workingParenExp);
+
+    evalParen = evalParen.replace(`(${workingParenExp})`, parenSolution);
+  }
+
+  let workingExp = parseExpression(evalParen);
 
   while (workingExp.includes("×") || workingExp.includes("÷")) {
     let i = workingExp.findIndex((e) => {
@@ -132,8 +153,8 @@ function solveExpression() {
 
 // Helper functions
 
-function parseExpression() {
-  return expression.value.split(/([×÷+−])/);
+function parseExpression(inputExp) {
+  return inputExp.split(/([×÷+−])/);
 }
 
 function handleFloat(num) {
@@ -166,7 +187,8 @@ function handleDecimalInput() {
 
 function handleParenthesisInput() {
   if (
-    expression.value.slice(locateLastOpenParen() + 1).length > 0 &&
+    expression.value.slice(locateLastOpenParen(expression.value) + 1).length >
+      0 &&
     noOfCloseParen() < noOfOpenParen()
   ) {
     inputValue(")");
@@ -175,12 +197,12 @@ function handleParenthesisInput() {
   }
 }
 
-function locateLastOpenParen() {
-  return expression.value.lastIndexOf("(");
+function locateLastOpenParen(inputExp) {
+  return inputExp.lastIndexOf("(");
 }
 
-function locateNextCloseParen(position) {
-  return expression.value.indexOf(")", position);
+function locateNextCloseParen(inputExp, position) {
+  return inputExp.indexOf(")", position);
 }
 
 function noOfOpenParen() {
