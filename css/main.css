@@ -127,10 +127,6 @@ button[data-key="clear"] {
   color: var(--red);
 }
 
-button[data-key="posneg"] {
-  font-size: 1.25rem;
-}
-
 .operator {
   color: var(--green);
   font-size: 1.75rem;

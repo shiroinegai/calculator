@@ -66,6 +66,18 @@ keys.forEach((key) => {
   if (value === "equal") {
     key.addEventListener("click", () => equal());
   }
+  if (value === "backspace") {
+    key.addEventListener("click", () => {
+      expression.focus();
+      expression.setRangeText(
+        "",
+        expression.selectionStart - 1,
+        expression.selectionEnd,
+        "end"
+      );
+      updateResult();
+    });
+  }
 });
 
 function equal() {
