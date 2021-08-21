@@ -22,6 +22,9 @@ expression.addEventListener("keydown", (e) => {
   } else if (e.key === ".") {
     e.preventDefault();
     handleDecimalInput();
+  } else if (e.key === "=" || e.key === "Enter") {
+    e.preventDefault();
+    equal();
   } else {
     e.preventDefault();
   }
@@ -60,7 +63,20 @@ keys.forEach((key) => {
   if (value.match(/[\d%×÷\+\−]/)) {
     key.addEventListener("click", () => inputValue(value));
   }
+  if (value === "equal") {
+    key.addEventListener("click", () => equal());
+  }
 });
+
+function equal() {
+  if (
+    !isNaN(parseFloat(result.innerText)) &&
+    isFinite(parseFloat(result.innerText))
+  ) {
+    expression.value = result.innerText;
+    result.innerText = "";
+  }
+}
 
 // Calculator logic & functions
 
