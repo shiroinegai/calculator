@@ -6,7 +6,7 @@ const expression = document.querySelector(".expression");
 
 expression.addEventListener("keydown", (e) => {
   if (
-    e.key.match(/[\d%\+()]|Backspace|Delete/) ||
+    e.key.match(/[\d\+()]|Backspace|Delete/) ||
     [37, 38, 39, 40].includes(e.keyCode) // arrow keys
   ) {
     return;
@@ -22,6 +22,9 @@ expression.addEventListener("keydown", (e) => {
   } else if (e.key === ".") {
     e.preventDefault();
     handleDecimalInput();
+  } else if (e.key === "%") {
+    e.preventDefault();
+    handlePercentInput();
   } else if (e.key === "=" || e.key === "Enter") {
     e.preventDefault();
     equal();
@@ -60,7 +63,10 @@ keys.forEach((key) => {
   if (value === ".") {
     key.addEventListener("click", () => handleDecimalInput());
   }
-  if (value.match(/[\d%×÷\+\−]/)) {
+  if (value === "%") {
+    key.addEventListener("click", () => handlePercentInput());
+  }
+  if (value.match(/[\d×÷\+\−]/)) {
     key.addEventListener("click", () => inputValue(value));
   }
   if (value === "equal") {
@@ -190,6 +196,29 @@ function handleFloat(num) {
   return rounded;
 }
 
+function handlePercentInput() {
+  inputValue("%");
+
+  let percentTest = expression.value.split(/[×÷+−]/);
+
+  for (let i = 0; i < percentTest.length; i++) {
+    if (
+      percentTest[i].match(/\d+(\.?\d*)%{2,}/) ||
+      percentTest[i].match(/%\d+(\.?\d*)/) ||
+      percentTest[i].match(/\d+(%{2,}\.?\d*)/) ||
+      percentTest[i] === "%"
+    ) {
+      expression.setRangeText(
+        "",
+        expression.selectionStart - 1,
+        expression.selectionEnd,
+        "end"
+      );
+      updateResult();
+    }
+  }
+}
+
 function handleDecimalInput() {
   inputValue(".");
 
@@ -200,6 +229,8 @@ function handleDecimalInput() {
       decimalTest[i].match(/\d+(\.{2,}\d*)/) ||
       decimalTest[i].match(/\.\d+(\.\d*)/) ||
       decimalTest[i].match(/\d+(\.\d*\.)/) ||
+      decimalTest[i].match(/\.{2,}%/) ||
+      decimalTest[i].match(/%\.+/) ||
       decimalTest[i] === "."
     ) {
       expression.setRangeText(
